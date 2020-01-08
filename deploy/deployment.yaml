@@ -1,0 +1,28 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: yx-api
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: yx-api
+    spec:
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: yx-config
+          name: yx-api
+          image: swr.cn-east-2.myhuaweicloud.com/yb7/yx-api:1.0.0
+          ports:
+          - containerPort: 80
+          volumeMounts:
+            - name: alilog-cfg
+              mountPath: /etc/config/
+      volumes:
+        - name: alilog-cfg
+          configMap:
+            name: alilog-cfg
+      imagePullSecrets:
+        - name: default-secret
